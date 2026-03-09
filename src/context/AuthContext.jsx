@@ -1,26 +1,11 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { authAPI } from '../api/client'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      authAPI.me()
-        .then(({ data }) => setUser(data))
-        .catch(() => {
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-        })
-        .finally(() => setLoading(false))
-    } else {
-      setLoading(false)
-    }
-  }, [])
+  const [user, setUser] = useState({ username: 'demo', email: 'demo@example.com' })
+  const [loading, setLoading] = useState(false)
 
   const login = async (username, password) => {
     const { data } = await authAPI.login({ username, password })
